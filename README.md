@@ -1,7 +1,7 @@
-# STM32 HAL library for SIM800 release MQTT client over AT command
+# STM32 HAL library for SIM800 release MQTT client (GPRS) over AT command
 
 ## English note
-Simple C library (STM32 HAL) for working with the MQTT protocol through AT commands of the SIM800 module
+Simple C library (STM32 HAL) for working with the MQTT protocol through AT commands (GPRS) of the SIM800 module
 https://aliexpress.ru/item/32284560394.html?spm=a2g0s.9042311.0.0.34a833edF2cSsx
 
 Configure STM32CubeMX by setting "General peripheral Initalizion as a pair of '.c / .h' file per peripheral" in the project settings.
@@ -59,7 +59,7 @@ MQTT_PingReq ();
 The library is implemented based on the code for generating MQTT packages of the project https://github.com/eclipse/paho.mqtt.embedded-c/tree/master/MQTTPacket
 
 ## Russian note
-Простая библиотека на С (STM32 HAL) для работы с протоколом MQTT через AT команды модуля SIM800
+Простая библиотека на С (STM32 HAL) для работы с протоколом MQTT (GPRS) через AT команды модуля SIM800
 https://aliexpress.ru/item/32284560394.html?spm=a2g0s.9042311.0.0.34a833edF2cSsx
 
 Сконфигурируйте STM32CubeMX установив "General peripheral Initalizion as a pair of '.c/.h' file per peripheral" в настройках проекта.
