@@ -48,12 +48,17 @@ uint8_t rx_buffer[64] = {0};
 int rx_index = 0;
 char answer[64] = {0};
 
-void Sim800_RxCallBack(void){
+/**
+  * Call back function for release read SIM800 UART buffer.
+  * @param NONE
+  * @return SIM800 answer for command (char answer[64])
+*/
+void Sim800_RxCallBack(void) {
     rx_buffer[rx_index++] = rx_data;
 
-    if(strstr((char*) rx_buffer, "\r\n") != NULL && rx_index == 2 ) {
+    if (strstr((char *) rx_buffer, "\r\n") != NULL && rx_index == 2) {
         rx_index = 0;
-    } else if (strstr((char*) rx_buffer, "\r\n") != NULL){
+    } else if (strstr((char *) rx_buffer, "\r\n") != NULL) {
         memcpy(answer, rx_buffer, sizeof(rx_buffer));
         rx_index = 0;
         memset(rx_buffer, 0, sizeof(rx_buffer));
@@ -61,7 +66,14 @@ void Sim800_RxCallBack(void){
     HAL_UART_Receive_IT(&huart1, &rx_data, 1);
 }
 
-int SIM800_SendCommand(char* command, char* reply, uint16_t delay){
+/**
+  * Send AT command to SIM800 over UART.
+  * @param command the command to be used the send AT command
+  * @param reply to be used to set the correct answer to the command
+  * @param delay to be used to the set pause to the reply
+  * @return error, 0 is OK
+  */
+int SIM800_SendCommand(char *command, char *reply, uint16_t delay) {
     HAL_UART_Transmit_IT(UART_SIM800, (unsigned char *) command, (uint16_t) strlen(command));
 
 #if FREERTOS == 1
@@ -70,17 +82,27 @@ int SIM800_SendCommand(char* command, char* reply, uint16_t delay){
     HAL_Delay(delay);
 #endif
 
-    if(strstr(answer, reply) != NULL){
+    if (strstr(answer, reply) != NULL) {
+        rx_index = 0;
+        memset(rx_buffer, 0, sizeof(rx_buffer));
         return 0;
     }
+    rx_index = 0;
+    memset(rx_buffer, 0, sizeof(rx_buffer));
     return 1;
 }
 
-int SIM800_SendData(uint8_t* buf, int len) {
+/**
+  * Send data over AT command.
+  * @param buf the buffer into which the data will be send
+  * @param len the length in bytes of the supplied buffer
+  * @return error, 0 is OK
+  */
+int SIM800_SendData(uint8_t *buf, int len) {
     char str[64] = {0};
     sprintf(str, "AT+CIPSEND=%d\r\n", len);
     SIM800_SendCommand(str, "", CMD_DELAY);
-    HAL_UART_Transmit_IT(UART_SIM800,  buf, len);
+    HAL_UART_Transmit_IT(UART_SIM800, buf, len);
 
 #if FREERTOS == 1
     osDelay(CMD_DELAY);
@@ -88,13 +110,22 @@ int SIM800_SendData(uint8_t* buf, int len) {
     HAL_Delay(CMD_DELAY);
 #endif
 
-    if(strstr(answer, "SEND OK") != NULL){
+    if (strstr(answer, "SEND OK") != NULL) {
+        rx_index = 0;
+        memset(rx_buffer, 0, sizeof(rx_buffer));
         return 0;
     }
+    rx_index = 0;
+    memset(rx_buffer, 0, sizeof(rx_buffer));
     return 1;
 }
 
-int SIM800_Init(void){
+/**
+  * initialization SIM800.
+  * @param NONE
+  * @return error the number of mistakes, 0 is OK
+  */
+int SIM800_Init(void) {
     int error = 0;
     HAL_UART_Receive_IT(UART_SIM800, &rx_data, 1);
     error += SIM800_SendCommand("AT\r\n", "OK\r\n", CMD_DELAY);
@@ -102,7 +133,21 @@ int SIM800_Init(void){
     return error;
 }
 
-int MQTT_Connect(char* apn, char* apn_user, char* apn_pass, char* host, uint16_t port, char* username, char* pass, char* clientID, unsigned short keepAliveInterval){
+/**
+  * Connect to MQTT server in Internet over TCP.
+  * @param apn to be used the set APN for you GSM net
+  * @param apn_user to be used the set user name for APN
+  * @param apn_pass to be used the set password for APN
+  * @param host to be used the set MQTT broker IP or host name
+  * @param port to be used the set MQTT broker TCP port
+  * @param username to be used the set authentication user name for MQTT broker
+  * @param pass to be used the set authentication password for MQTT broker
+  * @param clietID to be used to the set client identifier for MQTT broker
+  * @param keepAliveInterval to be used to the set keepalive interval for MQTT broker
+  * @return error the number of mistakes, 0 is OK
+  */
+int MQTT_Connect(char *apn, char *apn_user, char *apn_pass, char *host, uint16_t port, char *username, char *pass,
+                 char *clientID, unsigned short keepAliveInterval) {
     int error = 0;
     static char str[64] = {0};
     static unsigned char buf[200] = {0};
@@ -133,9 +178,15 @@ int MQTT_Connect(char* apn, char* apn_user, char* apn_pass, char* host, uint16_t
     return error;
 }
 
-int MQTT_Pub(char* topic, char* payload){
+/**
+  * Public on the MQTT broker of the message in a topic
+  * @param topic to be used to the set topic
+  * @param payload to be used to the set message for topic
+  * @return error the number of mistakes, 0 is OK
+  */
+int MQTT_Pub(char *topic, char *payload) {
     int error = 0;
-    static unsigned char buf[200]= {0};
+    static unsigned char buf[200] = {0};
     static unsigned char buf_payload[64] = {0};
 
     MQTTString topicString = MQTTString_initializer;
@@ -150,9 +201,14 @@ int MQTT_Pub(char* topic, char* payload){
     return error;
 }
 
-int MQTT_PingReq(void){
+/**
+  * Send a PINGREQ to the MQTT broker (active session)
+  * @param NONE
+  * @return error the number of mistakes, 0 is OK
+  */
+int MQTT_PingReq(void) {
     int error = 0;
-    static unsigned char buf[16]= {0};
+    static unsigned char buf[16] = {0};
 
     int mqtt_len = MQTTSerialize_pingreq(buf, sizeof(buf));
     error += SIM800_SendData(buf, mqtt_len);

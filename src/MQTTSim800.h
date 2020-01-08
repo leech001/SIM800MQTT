@@ -21,8 +21,14 @@
 // ==============
 
 void Sim800_RxCallBack(void);
-int SIM800_SendCommand(char* command, char* reply, uint16_t delay);
+
+int SIM800_SendCommand(char *command, char *reply, uint16_t delay);
+
 int SIM800_Init(void);
-int MQTT_Connect(char* apn, char* apn_user, char* apn_pass, char* host, uint16_t port, char* username, char* pass, char* clientID, unsigned short keepAliveInterval);
-int MQTT_Pub(char* topic, char* payload);
+
+int MQTT_Connect(char *apn, char *apn_user, char *apn_pass, char *host, uint16_t port, char *username, char *pass,
+                 char *clientID, unsigned short keepAliveInterval);
+
+int MQTT_Pub(char *topic, char *payload);
+
 int MQTT_PingReq(void);

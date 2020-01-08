@@ -95,10 +95,13 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  int error = 0;
+
   SIM800_Init();
 
   // Write you data
-//    MQTT_Connect("internet", "", "", "m21.cloudmqtt.com", 16938, "umlvfr", "_go5u456Rqk", "STM32Test", 120);
+//  MQTT_Connect("internet", "", "", "m21.cloudmqtt.com", 16938, "umlbwtvxxrx", "_go5upl5trhrthk", "STM32Test", 120);
+
   MQTT_Connect("APN", "APN NAME", "APN PASS", "HOST", PORT, "MQTT_USER", "MQTT_PASS", "CLIENTID", KEEPALIVEINTERVAL);
 
   /* USER CODE END 2 */
@@ -108,8 +111,15 @@ int main(void)
   while (1)
   {
 	HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+	error = MQTT_Pub("/STM32", "Test");
+
+	//Reconnect if error
+	if(error > 0){
+		MQTT_Connect("APN", "APN NAME", "APN PASS", "HOST", PORT, "MQTT_USER", "MQTT_PASS", "CLIENTID", KEEPALIVEINTERVAL);
+	}
+
 	HAL_Delay(10000);
-	MQTT_Pub("/STM32", "Test");
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
