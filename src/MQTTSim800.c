@@ -44,9 +44,9 @@
 #endif
 
 uint8_t rx_data = 0;
-uint8_t rx_buffer[64] = {0};
+uint8_t rx_buffer[32] = {0};
 int rx_index = 0;
-char answer[64] = {0};
+char answer[32] = {0};
 
 /**
   * Call back function for release read SIM800 UART buffer.
@@ -99,13 +99,13 @@ int SIM800_SendCommand(char *command, char *reply, uint16_t delay) {
   * @return error, 0 is OK
   */
 int SIM800_SendData(uint8_t *buf, int len) {
-    char str[64] = {0};
+    char str[32] = {0};
     sprintf(str, "AT+CIPSEND=%d\r\n", len);
-    SIM800_SendCommand(str, "", CMD_DELAY);
+    SIM800_SendCommand(str, "", 200);
     HAL_UART_Transmit_IT(UART_SIM800, buf, len);
 
 #if FREERTOS == 1
-    osDelay(CMD_DELAY);
+    osDelay(200);
 #else
     HAL_Delay(CMD_DELAY);
 #endif
@@ -149,8 +149,8 @@ int SIM800_Init(void) {
 int MQTT_Connect(char *apn, char *apn_user, char *apn_pass, char *host, uint16_t port, char *username, char *pass,
                  char *clientID, unsigned short keepAliveInterval) {
     int error = 0;
-    static char str[64] = {0};
-    static unsigned char buf[200] = {0};
+    char str[64] = {0};
+    unsigned char buf[64] = {0};
     MQTTPacket_connectData datas = MQTTPacket_connectData_initializer;
     datas.username.cstring = username;
     datas.password.cstring = pass;
@@ -186,15 +186,12 @@ int MQTT_Connect(char *apn, char *apn_user, char *apn_pass, char *host, uint16_t
   */
 int MQTT_Pub(char *topic, char *payload) {
     int error = 0;
-    static unsigned char buf[200] = {0};
-    static unsigned char buf_payload[64] = {0};
+    unsigned char buf[256] = {0};
 
     MQTTString topicString = MQTTString_initializer;
     topicString.cstring = topic;
 
-    memcpy(buf_payload, payload, strlen(payload));
-
-    int mqtt_len = MQTTSerialize_publish(buf, sizeof(buf), 0, 0, 0, 0, topicString, buf_payload, (int) strlen(payload));
+    int mqtt_len = MQTTSerialize_publish(buf, sizeof(buf), 0, 0, 0, 0, topicString, (unsigned char*) payload, (int) strlen(payload));
 
     error += SIM800_SendData(buf, mqtt_len);
 
@@ -208,7 +205,7 @@ int MQTT_Pub(char *topic, char *payload) {
   */
 int MQTT_PingReq(void) {
     int error = 0;
-    static unsigned char buf[16] = {0};
+    unsigned char buf[16] = {0};
 
     int mqtt_len = MQTTSerialize_pingreq(buf, sizeof(buf));
     error += SIM800_SendData(buf, mqtt_len);
