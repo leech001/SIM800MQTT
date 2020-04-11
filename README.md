@@ -9,7 +9,7 @@ Remember to enable global interrupts for your UART.
 Copy the library header and source file to the appropriate project directories (Inc, Src).
 Configure the UART port where your module is connected in the MQTTSim800.h file.
 ```
-#define UART_SIM800 & huart1
+#define UART_SIM800 &huart1
 #define FREERTOS 0
 #define CMD_DELAY 2000
 ```
@@ -22,9 +22,9 @@ In the head file of your project (main.c), include the header file
 add function call Sim800_RxCallBack () to interrupt UART
 ```
 / * USER CODE BEGIN 0 * /
-void HAL_UART_RxCpltCallback (UART_HandleTypeDef * huart) {
-    if (huart == & huart1) {
-        Sim800_RxCallBack ();
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
+    if (huart == &huart1) {
+        Sim800_RxCallBack();
     }
 }
 / * USER CODE END 0 * /
@@ -33,8 +33,8 @@ add the module initialization code and parameters for connecting to the MQTT ser
 ```
 / * USER CODE BEGIN 2 * /
 
-  SIM800_Init ();
-  MQTT_Connect ("APN", "APN NAME", "APN PASS", "HOST", PORT, "MQTT_USER", "MQTT_PASS", "CLIENTID", KEEPALIVEINTERVAL);
+  SIM800_Init();
+  MQTT_Connect("APN", "APN NAME", "APN PASS", "HOST", PORT, "MQTT_USER", "MQTT_PASS", "CLIENTID", KEEPALIVEINTERVAL);
 
  / * USER CODE END 2 * /
 ```
@@ -42,13 +42,13 @@ add a topic to the server in an infinite while (1) loop, for example every 10 se
 ```
 / * Infinite loop * /
   / * USER CODE BEGIN WHILE * /
-  while (1)
+  while(1)
   {
-MQTT_Pub ("/ STM32", "Test");
-HAL_Delay (10000);
-    / * USER CODE END WHILE * /
+    MQTT_Pub("/STM32", "Test");
+    HAL_Delay(10000);
+  / * USER CODE END WHILE * /
 
-    / * USER CODE BEGIN 3 * /
+  / * USER CODE BEGIN 3 * /
   }
   / * USER CODE END 3 * /
 ```
