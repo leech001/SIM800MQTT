@@ -23,7 +23,7 @@ add function call Sim800_RxCallBack () to interrupt UART
 ```
 / * USER CODE BEGIN 0 * /
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
-    if (huart == &huart1) {
+    if (huart == UART_SIM800) {
         Sim800_RxCallBack();
     }
 }
@@ -81,7 +81,7 @@ https://aliexpress.ru/item/32284560394.html?spm=a2g0s.9042311.0.0.34a833edF2cSsx
 ```
 /* USER CODE BEGIN 0 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-    if(huart == &huart1){
+    if(huart == UART_SIM800){
         Sim800_RxCallBack();
     }
 }
