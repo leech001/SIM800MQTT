@@ -57,7 +57,7 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-    if(huart == &huart1){
+    if(huart == UART_SIM800){
         Sim800_RxCallBack();
     }
 }
@@ -100,9 +100,8 @@ int main(void)
   SIM800_Init();
 
   // Write you data
-//  MQTT_Connect("internet", "", "", "m21.cloudmqtt.com", 16938, "umlbwtvxxrx", "_go5upl5trhrthk", "STM32Test", 120);
-
-  MQTT_Connect("APN", "APN NAME", "APN PASS", "HOST", PORT, "MQTT_USER", "MQTT_PASS", "CLIENTID", KEEPALIVEINTERVAL);
+  MQTT_Connect("internet", "", "", "m21.cloudmqtt.com", 16938, "umlbwtvxxrx", "_go5upl5trhrthk", "STM32Test", 120);
+//  MQTT_Connect("APN", "APN NAME", "APN PASS", "HOST", PORT, "MQTT_USER", "MQTT_PASS", "CLIENTID", KEEPALIVEINTERVAL);
 
   /* USER CODE END 2 */
 
@@ -115,7 +114,8 @@ int main(void)
 
 	//Reconnect if error
 	if(error > 0){
-		MQTT_Connect("APN", "APN NAME", "APN PASS", "HOST", PORT, "MQTT_USER", "MQTT_PASS", "CLIENTID", KEEPALIVEINTERVAL);
+		MQTT_Connect("internet", "", "", "m21.cloudmqtt.com", 16938, "umlbwtvxxrx", "_go5upl5trhrthk", "STM32Test", 120);
+//		MQTT_Connect("APN", "APN NAME", "APN PASS", "HOST", PORT, "MQTT_USER", "MQTT_PASS", "CLIENTID", KEEPALIVEINTERVAL);
 	}
 
 	HAL_Delay(10000);
