@@ -58,7 +58,7 @@ uint8_t mqtt_index = 0;
 /**
  * Call back function for release read SIM800 UART buffer.
  * @param NONE
- * @return None
+ * @return SIM800 answer for command (char answer[64])
  */
 void Sim800_RxCallBack(void) {
     rx_buffer[rx_index++] = rx_data;
