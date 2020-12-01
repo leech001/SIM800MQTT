@@ -4,9 +4,9 @@ Simple C library (STM32 HAL) for working with the MQTT protocol through AT comma
 https://aliexpress.ru/item/32284560394.html?spm=a2g0s.9042311.0.0.34a833edF2cSsx
 
 Configure STM32CubeMX by setting "General peripheral Initalizion as a pair of '.c / .h' file per peripheral" in the project settings.
-![photo](https://raw.githubusercontent.com/leech001/SIM800MQTT/master/img/ch_pair.jpg)
+![photo](https://raw.githubusercontent.com/leech001/SIM800MQTT/master/img/ch_pair.png)
 Remember to enable global interrupts for your UART.
-![photo](https://raw.githubusercontent.com/leech001/SIM800MQTT/master/img/nvic.jpg)
+![photo](https://raw.githubusercontent.com/leech001/SIM800MQTT/master/img/nvic.png)
 Copy the library header and source file to the appropriate project directories (Inc, Src).
 Configure the UART port where your module is connected in the MQTTSim800.h file.
 ```
