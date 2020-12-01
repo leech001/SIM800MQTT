@@ -24,6 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdlib.h>
 #include "MQTTSim800.h"
 /* USER CODE END Includes */
 
@@ -123,10 +124,14 @@ int main(void) {
             if(sub == 0){
                 MQTT_Sub("test");
                 sub = 1;
-                HAL_Delay(3000);
             }
             MQTT_Pub("STM32", "test");
-//            MQTT_PingReq();
+
+            if(SIM800.mqttReceive.newEvent) {
+                unsigned char *topic = SIM800.mqttReceive.topic;
+                int payload = atoi(SIM800.mqttReceive.payload);
+                SIM800.mqttReceive.newEvent = 0;
+            }
         }
         HAL_Delay(1000);
         /* USER CODE END WHILE */

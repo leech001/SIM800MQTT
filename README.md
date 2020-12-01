@@ -1,14 +1,16 @@
-# STM32 HAL library for SIM800 release MQTT client (GPRS) over AT command
+# STM32 HAL library for SIM800 (GPRS) release MQTT client  over AT command
 
-Simple C library (STM32 HAL) for working with the MQTT protocol through AT commands (GPRS) of the SIM800 module
+Simple C library (STM32 HAL) for working with the MQTT protocol through AT commands of the SIM800 (GPRS) module
 https://aliexpress.ru/item/32284560394.html?spm=a2g0s.9042311.0.0.34a833edF2cSsx
 
 Configure STM32CubeMX by setting "General peripheral Initalizion as a pair of '.c / .h' file per peripheral" in the project settings.
+![photo](https://raw.githubusercontent.com/leech001/SIM800MQTT/master/img/ch_pair.jpg)
 Remember to enable global interrupts for your UART.
+![photo](https://raw.githubusercontent.com/leech001/SIM800MQTT/master/img/nvic.jpg)
 Copy the library header and source file to the appropriate project directories (Inc, Src).
 Configure the UART port where your module is connected in the MQTTSim800.h file.
 ```
-#define UART_SIM800 &huart1
+#define UART_SIM800 &huart2
 #define FREERTOS 0
 #define CMD_DELAY 2000
 ```
@@ -60,30 +62,31 @@ add Subscription status
     uint8_t sub = 0;
 / * USER CODE END 2 * /
 ```
-add a topic to the server in an infinite while (1) loop, for example every 10 seconds.
+add a send topic "STM32" and value "test" to the server in an infinite while (1) loop, for example every 1 seconds.
+add subscribe to topic "test" 
 ```
-    /* Infinite loop */
-    /* USER CODE BEGIN WHILE */
-    while (1) {
-        if (SIM800.mqttServer.connect == 0) {
-            MQTT_Init();
-            sub = 0;
-        }
-        if (SIM800.mqttServer.connect == 1) {
-            if(sub == 0){
-                MQTT_Sub("test");
-                sub = 1;
-                HAL_Delay(3000);
-            }
-            MQTT_Pub("STM32", "test");
-//            MQTT_PingReq();
-        }
-        HAL_Delay(1000);
-        /* USER CODE END WHILE */
+ /* Infinite loop */
+ /* USER CODE BEGIN WHILE */
+ while (1) {
+     if (SIM800.mqttServer.connect == 0) {
+         MQTT_Init();
+         sub = 0;
+     }
+     if (SIM800.mqttServer.connect == 1) {
+         if(sub == 0){
+             MQTT_Sub("test");
+             sub = 1;
+         }
+         MQTT_Pub("STM32", "test");
 
-        /* USER CODE BEGIN 3 */
-    }
-    /* USER CODE END 3 */
+         if(SIM800.mqttReceive.newEvent) {
+             unsigned char *topic = SIM800.mqttReceive.topic;
+             int payload = atoi(SIM800.mqttReceive.payload);
+             SIM800.mqttReceive.newEvent = 0;
+         }
+     }
+     HAL_Delay(1000);
+     /* USER CODE END WHILE */
 ```
 This completes the setup.
 Check in loop SIM800.mqttReceive.newEvent for new publish events. Set to 0 (zero) while use new data.
