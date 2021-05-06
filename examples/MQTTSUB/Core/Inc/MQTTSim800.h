@@ -93,6 +93,16 @@ void MQTT_Connect(void);
 
 void MQTT_Pub(char *topic, char *payload);
 
+void MQTT_PubUint8(char *topic, uint8_t data);
+
+void MQTT_PubUint16(char *topic, uint16_t data);
+
+void MQTT_PubUint32(char *topic, uint32_t data);
+
+void MQTT_PubFloat(char *topic, float payload);
+
+void MQTT_PubDouble(char *topic, double data);
+
 void MQTT_PingReq(void);
 
 void MQTT_Sub(char *topic);

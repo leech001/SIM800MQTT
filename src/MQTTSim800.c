@@ -224,6 +224,71 @@ void MQTT_Pub(char *topic, char *payload) {
     int mqtt_len = MQTTSerialize_publish(buf, sizeof(buf), 0, 0, 0, 0,
                                          topicString, (unsigned char *) payload, (int) strlen(payload));
     HAL_UART_Transmit_IT(UART_SIM800, buf, mqtt_len);
+#if FREERTOS == 1
+    osDelay(100);
+#else
+    HAL_Delay(100);
+#endif
+}
+
+/**
+ * Public on the MQTT broker of the message in a topic
+ * @param topic (uint8_t)  to be used to the set topic
+ * @param payload to be used to the set message for topic
+ * @return NONE
+ */
+void MQTT_PubUint8(char *topic, uint8_t payload) {
+	char str[32] = { 0 };
+	sprintf(str, "%d", payload);
+	MQTT_Pub(topic, str);
+}
+
+/**
+ * Public on the MQTT broker of the message in a topic
+ * @param topic (uint16_t)  to be used to the set topic
+ * @param payload to be used to the set message for topic
+ * @return NONE
+ */
+void MQTT_PubUint16(char *topic, uint16_t payload) {
+	char str[32] = { 0 };
+	sprintf(str, "%d", payload);
+	MQTT_Pub(topic, str);
+}
+
+/**
+ * Public on the MQTT broker of the message in a topic
+ * @param topic (uint32_t)  to be used to the set topic
+ * @param payload to be used to the set message for topic
+ * @return NONE
+ */
+void MQTT_PubUint32(char *topic, uint32_t payload) {
+	char str[32] = { 0 };
+	sprintf(str, "%ld", payload);
+	MQTT_Pub(topic, str);
+}
+
+/**
+ * Public on the MQTT broker of the message in a topic
+ * @param topic (float)  to be used to the set topic
+ * @param payload to be used to the set message for topic
+ * @return NONE
+ */
+void MQTT_PubFloat(char *topic, float payload) {
+	char str[32] = { 0 };
+	sprintf(str, "%f", payload);
+	MQTT_Pub(topic, str);
+}
+
+/**
+ * Public on the MQTT broker of the message in a topic
+ * @param topic (double)  to be used to the set topic
+ * @param payload to be used to the set message for topic
+ * @return NONE
+ */
+void MQTT_PubDouble(char *topic, double payload) {
+	char str[32] = { 0 };
+	sprintf(str, "%f", payload);
+	MQTT_Pub(topic, str);
 }
 
 /**
@@ -253,9 +318,9 @@ void MQTT_Sub(char *topic) {
                                            &topicString, 0);
     HAL_UART_Transmit_IT(UART_SIM800, buf, mqtt_len);
 #if FREERTOS == 1
-    osDelay(5000);
+    osDelay(100);
 #else
-    HAL_Delay(5000);
+    HAL_Delay(100);
 #endif
 }
 
