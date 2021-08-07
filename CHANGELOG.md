@@ -1,3 +1,7 @@
+## [2.1.1] - 2021-08-07
+- Add "DEACT" error;
+- Correct printf placeholder params for unsigned;
+
 ## [2.1.0] - 2021-05-06
 - Corrected delay on PUB SUB functions;
 - Added publishing functions (MQTT_PubUint8, MQTT_PubUint16, MQTT_PubDouble, etc ) for numeric types:
