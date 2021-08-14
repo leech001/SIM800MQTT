@@ -37,30 +37,36 @@
 
 // === CONFIG ===
 #define UART_SIM800 &huart2
-#define FREERTOS    0
-#define CMD_DELAY   2000
+#define FREERTOS 0
+#define CMD_DELAY 3000
+#define MQTT_CHECK 1
+
 // ==============
 
-typedef struct {
+typedef struct
+{
     char *apn;
     char *apn_user;
     char *apn_pass;
 } sim_t;
 
-typedef struct {
+typedef struct
+{
     char *host;
     uint16_t port;
     uint8_t connect;
 } mqttServer_t;
 
-typedef struct {
+typedef struct
+{
     char *username;
     char *pass;
     char *clientID;
     unsigned short keepAliveInterval;
 } mqttClient_t;
 
-typedef struct {
+typedef struct
+{
     uint8_t newEvent;
     unsigned char dup;
     int qos;
@@ -72,11 +78,13 @@ typedef struct {
     int topicLen;
 } mqttReceive_t;
 
-typedef struct {
+typedef struct
+{
     sim_t sim;
     mqttServer_t mqttServer;
     mqttClient_t mqttClient;
     mqttReceive_t mqttReceive;
+    char *mqttCheckTopic;
 } SIM800_t;
 
 void Sim800_RxCallBack(void);
@@ -108,3 +116,5 @@ void MQTT_PingReq(void);
 void MQTT_Sub(char *topic);
 
 void MQTT_Receive(unsigned char *buf);
+
+void MQTT_Check(void);
