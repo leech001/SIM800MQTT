@@ -1,3 +1,6 @@
+## [2.2.0] - 2021-08-14
+- Add new function to check connect MQTT broker;
+
 ## [2.1.1] - 2021-08-07
 - Add "DEACT" error;
 - Correct printf placeholder params for unsigned;

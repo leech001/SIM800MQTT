@@ -124,6 +124,9 @@ int main(void)
     float pub_float = 1.1;
     double pub_double = 2.2;
 
+    // Check MQTT broker topic
+    SIM800.mqttCheckTopic = "MQTTCheck";
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -151,6 +154,9 @@ int main(void)
                 int payload = atoi(SIM800.mqttReceive.payload);
                 SIM800.mqttReceive.newEvent = 0;
             }
+
+            //Check MQTT
+				    MQTT_Check();
         }
         HAL_Delay(1000);
     /* USER CODE END WHILE */

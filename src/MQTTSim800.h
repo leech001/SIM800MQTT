@@ -38,9 +38,8 @@
 // === CONFIG ===
 #define UART_SIM800 &huart2
 #define FREERTOS 0
-#define CMD_DELAY 3000
+#define CMD_DELAY 2000
 #define MQTT_CHECK 1
-
 // ==============
 
 typedef struct
