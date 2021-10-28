@@ -36,7 +36,13 @@
  * ------------------------------------------------------------------------------------------------------------------------------------------------
 */
 
+#include <main.h>
+#include <usart.h>
 #include <Sim800Data.h>
+#if FREERTOS == 1
+#include <cmsis_os.h>
+#endif
+#include <stdint.h>
 
 class MQTTSim800
 {
@@ -52,7 +58,7 @@ public:
   void rxCallBack(void);
   void clearRxBuffer(void);
   void clearMqttBuffer(void);
-  int sendCommand(char *command, char *reply, uint16_t delay);
+  int sendCommand(const char *command, const char *reply, uint16_t delay);
   int init(void);
   void connect(void);
   void publish(char *topic, char *payload);

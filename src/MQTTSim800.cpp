@@ -37,8 +37,6 @@
 */
 
 #include <MQTTSim800.hpp>
-#include "main.h"
-#include "usart.h"
 #include <string.h>
 #include "MQTTPacket.h"
 
@@ -62,7 +60,7 @@ void MQTTSim800::setMqttServer(const char *host, uint16_t port) {
   mModem.mqttServer.port = port;
 }
 
-void setClientData(const char *userMqtt, const char* passMqtt, const char *clientId, unsigned short interval) {
+void MQTTSim800::setClientData(const char *userMqtt, const char* passMqtt, const char *clientId, unsigned short interval) {
   strcpy(&mModem.mqttClient.username[0], userMqtt);
   strcpy(&mModem.mqttClient.pass[0], passMqtt);
   strcpy(&mModem.mqttClient.clientID[0], clientId);
@@ -158,7 +156,7 @@ void MQTTSim800::clearMqttBuffer(void)
  * @param delay to be used to the set pause to the reply
  * @return error, 0 is OK
  */
-int MQTTSim800::sendCommand(char *command, char *reply, uint16_t delay)
+int MQTTSim800::sendCommand(const char *command, const char *reply, uint16_t delay)
 {
     HAL_UART_Transmit_IT(mUart, (unsigned char *)command,
                          (uint16_t)strlen(command));
@@ -187,7 +185,7 @@ int MQTTSim800::init(void)
 {
     mModem.mqttServer.connect = 0;
     int error = 0;
-    char str[32] = {0};
+    char str[SIM800_MAXCMD_LEN] = {0};
     HAL_UART_Receive_IT(mUart, &mRxData, 1);
 
     sendCommand("AT\r\n", "OK\r\n", CMD_DELAY);

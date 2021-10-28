@@ -1,10 +1,13 @@
 #ifndef __SRC_SIM800DATA_H__
 #define __SRC_SIM800DATA_H__
 
+#include <stdint.h>
+
 // === CONFIG ===
 #define FREERTOS    0
 #define CMD_DELAY   2000
 #define MQTT_MSG_MAXSIZE 1460
+#define SIM800_MAXCMD_LEN 256
 // ==============
 
 typedef struct {
